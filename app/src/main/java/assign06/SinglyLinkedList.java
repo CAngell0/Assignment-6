@@ -3,9 +3,11 @@ package assign06;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
+import javax.swing.text.html.parser.Element;
+
 public class SinglyLinkedList<E> implements List<E> {
-    private SingleLinkedNode<E> head;
-    private SingleLinkedNode<E> tail;
+    private Node<E> head;
+    private Node<E> tail;
     private int size;
 
     public SinglyLinkedList(){
@@ -16,8 +18,8 @@ public class SinglyLinkedList<E> implements List<E> {
 
     @Override
     public void clear() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'clear'");
+        this.head = null;
+        this.tail = null;
     }
 
     @Override
@@ -32,8 +34,16 @@ public class SinglyLinkedList<E> implements List<E> {
 
     @Override
     public E get(int index) throws IndexOutOfBoundsException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'get'");
+        if(index >= this.size || index < 0){
+            throw new IndexOutOfBoundsException("Index is out of bounds");
+        }
+        Node<E> curr = this.head;
+        int i = 0;
+        while(i < index){
+            curr = curr.next;
+            i++;
+        }
+        return curr.value;
     }
 
     @Override
@@ -48,29 +58,51 @@ public class SinglyLinkedList<E> implements List<E> {
 
     @Override
     public int indexOf(E element) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'indexOf'");
+        Node<E> curr = this.head;
+        int i = 0;
+        while(!curr.value.equals(element)){
+            curr = curr.next;
+            i++;
+        }
+        return i;
     }
 
     @Override
     public void insert(int index, E element) throws IndexOutOfBoundsException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'insert'");
+        if(index == 0){
+            insertFirst(element);
+        }
+        else if(index == this.size){
+            insertLast(element);
+        }
+        
+        Node<E> curr = this.head;
+        int i = 0;
+        while(i < index-1){
+            curr = curr.next;
+            i++;
+        }
+        Node<E> afterCurr = curr.next;
+        Node<E> newNode = new Node<>();
+        newNode.value = element;
+        curr.next = newNode;
+        newNode.next = afterCurr;
+        this.size++;
     }
 
     @Override
     public void insertFirst(E element) {
-        SingleLinkedNode<E> node = new SingleLinkedNode<E>();
+        Node<E> node = new Node<E>();
         node.value = element;
-        node.linkedNode = head;
+        node.next = head;
         this.head = node;
     }
 
     @Override
     public void insertLast(E element) {
-        SingleLinkedNode<E> node = new SingleLinkedNode<E>();
+        Node<E> node = new Node<E>();
         node.value = element;
-        this.tail.linkedNode = node;
+        this.tail.next = node;
         this.tail = node;
     }
 
@@ -82,8 +114,8 @@ public class SinglyLinkedList<E> implements List<E> {
 
     @Override
     public E deleteFirst() throws NoSuchElementException {
-        SingleLinkedNode<E> node = head;
-        this.head = head.linkedNode;
+        Node<E> node = head;
+        this.head = head.next;
         return node.value;
     }
 
@@ -100,13 +132,13 @@ public class SinglyLinkedList<E> implements List<E> {
     }
     
 
-    public static class SingleLinkedNode<E> {
+    public static class Node<E> {
         private E value;
-        private SingleLinkedNode<E> linkedNode;
+        private Node<E> next;
 
-        public SingleLinkedNode(){
+        public Node(){
             this.value = null;
-            this.linkedNode = null;
+            this.next = null;
         }
     }
 }
