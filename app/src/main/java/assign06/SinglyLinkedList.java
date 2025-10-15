@@ -1,4 +1,4 @@
-package main.java.assign06;
+package assign06;
 
 public class SinglyLinkedList {
     
