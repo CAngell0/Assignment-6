@@ -60,14 +60,18 @@ public class SinglyLinkedList<E> implements List<E> {
 
     @Override
     public void insertFirst(E element) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'insertFirst'");
+        SingleLinkedNode<E> node = new SingleLinkedNode<E>();
+        node.value = element;
+        node.linkedNode = head;
+        this.head = node;
     }
 
     @Override
     public void insertLast(E element) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'insertLast'");
+        SingleLinkedNode<E> node = new SingleLinkedNode<E>();
+        node.value = element;
+        this.tail.linkedNode = node;
+        this.tail = node;
     }
 
     @Override
@@ -78,8 +82,9 @@ public class SinglyLinkedList<E> implements List<E> {
 
     @Override
     public E deleteFirst() throws NoSuchElementException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'deleteFirst'");
+        SingleLinkedNode<E> node = head;
+        this.head = head.linkedNode;
+        return node.value;
     }
 
     @Override
