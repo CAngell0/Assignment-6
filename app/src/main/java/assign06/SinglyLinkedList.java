@@ -4,6 +4,15 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 public class SinglyLinkedList<E> implements List<E> {
+    private SingleLinkedNode<E> head;
+    private SingleLinkedNode<E> tail;
+    private int size;
+
+    public SinglyLinkedList(){
+        this.head = null;
+        this.tail = null;
+        this.size = 0;
+    }
 
     @Override
     public void clear() {
@@ -13,14 +22,12 @@ public class SinglyLinkedList<E> implements List<E> {
 
     @Override
     public boolean isEmpty() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'isEmpty'");
+        return this.size == 0;
     }
 
     @Override
     public int size() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'size'");
+        return this.size;
     }
 
     @Override
@@ -31,14 +38,12 @@ public class SinglyLinkedList<E> implements List<E> {
 
     @Override
     public E getFirst() throws NoSuchElementException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getFirst'");
+        return this.head.value;
     }
 
     @Override
     public E getLast() throws NoSuchElementException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getLast'");
+        return this.tail.value;
     }
 
     @Override
@@ -89,6 +94,7 @@ public class SinglyLinkedList<E> implements List<E> {
         throw new UnsupportedOperationException("Unimplemented method 'toArray'");
     }
     
+
     public static class SingleLinkedNode<E> {
         private E value;
         private SingleLinkedNode<E> linkedNode;
@@ -96,20 +102,6 @@ public class SinglyLinkedList<E> implements List<E> {
         public SingleLinkedNode(){
             this.value = null;
             this.linkedNode = null;
-        }
-
-        public void setValue(E value){
-            this.value = value;
-        }
-        public E getValue(){
-            return this.value;
-        }
-
-        public void setLinkedNode(SingleLinkedNode<E> node){
-            this.linkedNode = node;
-        }
-        public SingleLinkedNode<E> getLinkedNode(){
-            return this.linkedNode;
         }
     }
 }
