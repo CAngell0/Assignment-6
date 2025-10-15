@@ -89,4 +89,27 @@ public class SinglyLinkedList<E> implements List<E> {
         throw new UnsupportedOperationException("Unimplemented method 'toArray'");
     }
     
+    public static class SingleLinkedNode<E> {
+        private E value;
+        private SingleLinkedNode<E> linkedNode;
+
+        public SingleLinkedNode(){
+            this.value = null;
+            this.linkedNode = null;
+        }
+
+        public void setValue(E value){
+            this.value = value;
+        }
+        public E getValue(){
+            return this.value;
+        }
+
+        public void setLinkedNode(SingleLinkedNode<E> node){
+            this.linkedNode = node;
+        }
+        public SingleLinkedNode<E> getLinkedNode(){
+            return this.linkedNode;
+        }
+    }
 }
