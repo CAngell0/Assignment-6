@@ -3,8 +3,6 @@ package assign06;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-import javax.swing.text.html.parser.Element;
-
 public class SinglyLinkedList<E> implements List<E> {
     private Node<E> head;
     private Node<E> tail;
@@ -20,6 +18,7 @@ public class SinglyLinkedList<E> implements List<E> {
     public void clear() {
         this.head = null;
         this.tail = null;
+        this.size = 0;
     }
 
     @Override
@@ -108,8 +107,19 @@ public class SinglyLinkedList<E> implements List<E> {
 
     @Override
     public E delete(int index) throws IndexOutOfBoundsException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'delete'");
+        if (size == 0 || index == size) throw new IndexOutOfBoundsException("Index out of bounds");
+
+        int i = 0;
+        Node<E> curr = head;
+        while (i < index-1){
+            curr = curr.next;
+            index++;
+        }
+
+        Node<E> target = curr.next;
+        curr.next = target.next;
+        target.next = null;
+        return target.value;
     }
 
     @Override
@@ -121,14 +131,22 @@ public class SinglyLinkedList<E> implements List<E> {
 
     @Override
     public Iterator<E> iterator() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'iterator'");
+        return new SimplyLinkedListIterator<E>();
     }
 
     @Override
     public Object[] toArray() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'toArray'");
+        Object[] array = new Object[size];
+
+        int i = 0;
+        Node<E> current = head;
+        while (i < size){
+            array[i] = (Object) current.value;
+            current = current.next;
+            i++;
+        }
+
+        return array;
     }
     
 
@@ -139,6 +157,34 @@ public class SinglyLinkedList<E> implements List<E> {
         public Node(){
             this.value = null;
             this.next = null;
+        }
+    }
+
+    public static class SimplyLinkedListIterator<E> implements Iterator<E> {
+        private Node<E> currentNode;
+        private Node<E> previousNode;
+        private boolean wasNextCalled;
+
+        @Override
+        public boolean hasNext() {
+            return currentNode.next != null;
+        }
+
+        @Override
+        public E next() {
+            if (!hasNext()) throw new NoSuchElementException("There is not next element");
+            previousNode = currentNode;
+            currentNode = currentNode.next;
+            wasNextCalled = true;
+            return currentNode.value;
+        }
+
+        @Override
+        public void remove() {
+            if (!wasNextCalled) throw new IllegalStateException("Remove cannot be called before next");
+            previousNode.next = currentNode.next;
+            currentNode.next = null;
+            currentNode = previousNode.next;
         }
     }
 }
