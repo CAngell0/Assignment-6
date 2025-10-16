@@ -47,11 +47,17 @@ public class SinglyLinkedList<E> implements List<E> {
 
     @Override
     public E getFirst() throws NoSuchElementException {
+        if(this.size < 1){
+            throw new NoSuchElementException("Linked list has no nodes");
+        }
         return this.head.value;
     }
 
     @Override
     public E getLast() throws NoSuchElementException {
+        if(this.size < 1){
+            throw new NoSuchElementException("Linked list has no nodes");
+        }
         return this.tail.value;
     }
 
@@ -60,6 +66,9 @@ public class SinglyLinkedList<E> implements List<E> {
         Node<E> curr = this.head;
         int i = 0;
         while(!curr.value.equals(element)){
+            if(i >= this.size-1){
+                return -1;
+            }
             curr = curr.next;
             i++;
         }
@@ -68,11 +77,16 @@ public class SinglyLinkedList<E> implements List<E> {
 
     @Override
     public void insert(int index, E element) throws IndexOutOfBoundsException {
+        if(index < 0 || index >= this.size){
+            throw new IndexOutOfBoundsException("Index is out of bounds");
+        }
         if(index == 0){
             insertFirst(element);
+            return;
         }
         else if(index == this.size){
             insertLast(element);
+            return;
         }
         
         Node<E> curr = this.head;
@@ -91,47 +105,76 @@ public class SinglyLinkedList<E> implements List<E> {
 
     @Override
     public void insertFirst(E element) {
+        if(this.size == 0){
+            this.head.value = element;
+            this.tail.value = element;
+            size++;
+            return;    
+        }
         Node<E> node = new Node<E>();
         node.value = element;
         node.next = head;
         this.head = node;
+        size++;
     }
 
     @Override
     public void insertLast(E element) {
+        if(this.size == 0){
+            this.head.value = element;
+            this.tail.value = element;
+            size++;
+            return;    
+        }
         Node<E> node = new Node<E>();
         node.value = element;
         this.tail.next = node;
         this.tail = node;
+        size++;
     }
 
     @Override
     public E delete(int index) throws IndexOutOfBoundsException {
-        if (size == 0 || index == size) throw new IndexOutOfBoundsException("Index out of bounds");
-
+        if (size < 0 || index >= size) throw new IndexOutOfBoundsException("Index out of bounds");
+        if (index == this.size -1){
+            E val = this.tail.value;
+            this.tail = null;
+            size--;
+            return val;
+        }
         int i = 0;
         Node<E> curr = head;
         while (i < index-1){
             curr = curr.next;
-            index++;
+            i++;
         }
 
         Node<E> target = curr.next;
         curr.next = target.next;
         target.next = null;
+        size--;
         return target.value;
     }
 
     @Override
     public E deleteFirst() throws NoSuchElementException {
+        if(size <= 0) throw new NoSuchElementException("Linked list is empty");
+        if(size == 1){
+            E val = this.head.value;
+            this.head = null;
+            this.tail = null;
+            this.size = 0;
+            return val;
+        }
         Node<E> node = head;
         this.head = head.next;
+        size--;
         return node.value;
     }
 
     @Override
     public Iterator<E> iterator() {
-        return new SimplyLinkedListIterator<E>();
+        return new SinglyLinkedListIterator<E>();
     }
 
     @Override
@@ -141,7 +184,7 @@ public class SinglyLinkedList<E> implements List<E> {
         int i = 0;
         Node<E> current = head;
         while (i < size){
-            array[i] = (Object) current.value;
+            array[i] = current.value;
             current = current.next;
             i++;
         }
@@ -160,7 +203,7 @@ public class SinglyLinkedList<E> implements List<E> {
         }
     }
 
-    public static class SimplyLinkedListIterator<E> implements Iterator<E> {
+    public static class SinglyLinkedListIterator<E> implements Iterator<E> {
         private Node<E> currentNode;
         private Node<E> previousNode;
         private boolean wasNextCalled;
