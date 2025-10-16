@@ -68,15 +68,6 @@ public class SinglyLinkedList<E> implements List<E> {
         }
         Node<E> curr = this.head;
         int i = 0;
-        //CHAT GPT explain why I should use this over our current version.
-        // while (curr != null) {
-        //     curr = curr.next;
-        //     i++;
-        //     if(curr.value.equals(element)){
-        //         return i;
-        //     }
-        // }
-        // return -1;
         while(!curr.value.equals(element)){
             if(i >= this.size-1){
                 return -1;
@@ -138,22 +129,28 @@ public class SinglyLinkedList<E> implements List<E> {
     @Override
     public E delete(int index) throws IndexOutOfBoundsException {
         if (index < 0 || index >= size) throw new IndexOutOfBoundsException("Index out of bounds");
-        // if (index == this.size -1){
-        //     E val = this.tail.value;
-        //     this.tail = null;
-        //     size--;
-        //     return val;
-        // }
+        if (size == 0) throw new NoSuchElementException("List is empty");
+
+        E value = null;
+        if (size == 1){
+            value = head.value;
+            head = tail = null;
+            return value;
+        }
+        if (index == 0){
+            value = head.value;
+            head = head.next;
+            return value;
+        }
 
         Node<E> curr = head;
-        // for (int i = 0; i < index - 1; i++){
-        //     curr = curr.next;
-        // }
-        Node<E> target = curr.next;
-        curr.next = target.next;
-        target.next = null;
-        size--;
-        return target.value;
+        for (int i = 0; i < index - 1; i++){
+            curr = curr.next;
+        }
+
+        value = curr.next.value;
+        curr.next = curr.next.next;
+        return value;
     }
 
     @Override
