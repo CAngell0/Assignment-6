@@ -63,8 +63,20 @@ public class SinglyLinkedList<E> implements List<E> {
 
     @Override
     public int indexOf(E element) {
+        if(this.size <= 0){
+            return -1;
+        }
         Node<E> curr = this.head;
         int i = 0;
+        //CHAT GPT explain why I should use this over our current version.
+        // while (curr != null) {
+        //     curr = curr.next;
+        //     i++;
+        //     if(curr.value.equals(element)){
+        //         return i;
+        //     }
+        // }
+        // return -1;
         while(!curr.value.equals(element)){
             if(i >= this.size-1){
                 return -1;
@@ -77,7 +89,7 @@ public class SinglyLinkedList<E> implements List<E> {
 
     @Override
     public void insert(int index, E element) throws IndexOutOfBoundsException {
-        if(index < 0 || index >= this.size){
+        if(index < 0 || index > this.size){
             throw new IndexOutOfBoundsException("Index is out of bounds");
         }
         if(index == 0){
@@ -125,19 +137,18 @@ public class SinglyLinkedList<E> implements List<E> {
 
     @Override
     public E delete(int index) throws IndexOutOfBoundsException {
-        if (size < 0 || index >= size) throw new IndexOutOfBoundsException("Index out of bounds");
-        if (index == this.size -1){
-            E val = this.tail.value;
-            this.tail = null;
-            size--;
-            return val;
-        }
+        if (index < 0 || index >= size) throw new IndexOutOfBoundsException("Index out of bounds");
+        // if (index == this.size -1){
+        //     E val = this.tail.value;
+        //     this.tail = null;
+        //     size--;
+        //     return val;
+        // }
 
         Node<E> curr = head;
-        for (int i = 0; i < index - 1; i++){
-            curr = curr.next;
-        }
-
+        // for (int i = 0; i < index - 1; i++){
+        //     curr = curr.next;
+        // }
         Node<E> target = curr.next;
         curr.next = target.next;
         target.next = null;
@@ -221,7 +232,6 @@ public class SinglyLinkedList<E> implements List<E> {
 
         @Override
         public void remove() {
-            //TODO - Come back to this method
             if (!wasNextCalled) throw new IllegalStateException("Remove cannot be called before next");
             previousNode.next = currentNode.next;
             currentNode.next = null;
