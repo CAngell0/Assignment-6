@@ -8,7 +8,7 @@ public class SinglyLinkedList<E> implements List<E> {
     private Node<E> tail;
     private int size;
 
-    public SinglyLinkedList(){
+    public SinglyLinkedList() {
         this.head = null;
         this.tail = null;
         this.size = 0;
@@ -33,12 +33,12 @@ public class SinglyLinkedList<E> implements List<E> {
 
     @Override
     public E get(int index) throws IndexOutOfBoundsException {
-        if(index >= this.size || index < 0){
+        if (index >= this.size || index < 0) {
             throw new IndexOutOfBoundsException("Index is out of bounds");
         }
         Node<E> curr = this.head;
         int i = 0;
-        while(i < index){
+        while (i < index) {
             curr = curr.next;
             i++;
         }
@@ -47,7 +47,7 @@ public class SinglyLinkedList<E> implements List<E> {
 
     @Override
     public E getFirst() throws NoSuchElementException {
-        if(this.size < 1){
+        if (this.size < 1) {
             throw new NoSuchElementException("Linked list has no nodes");
         }
         return this.head.value;
@@ -55,7 +55,7 @@ public class SinglyLinkedList<E> implements List<E> {
 
     @Override
     public E getLast() throws NoSuchElementException {
-        if(this.size < 1){
+        if (this.size < 1) {
             throw new NoSuchElementException("Linked list has no nodes");
         }
         return this.tail.value;
@@ -63,37 +63,36 @@ public class SinglyLinkedList<E> implements List<E> {
 
     @Override
     public int indexOf(E element) {
-        if(this.size <= 0){
+        if (this.size <= 0) {
             return -1;
         }
         Node<E> curr = this.head;
         int i = 0;
-        while(!curr.value.equals(element)){
-            if(i >= this.size-1){
-                return -1;
+        while (curr != null) {
+            if (curr.value.equals(element)) {
+                return i;
             }
             curr = curr.next;
             i++;
         }
-        return i;
+        return -1;
     }
 
     @Override
     public void insert(int index, E element) throws IndexOutOfBoundsException {
-        if(index < 0 || index > this.size){
+        if (index < 0 || index > this.size) {
             throw new IndexOutOfBoundsException("Index is out of bounds");
         }
-        if(index == 0){
+        if (index == 0) {
             insertFirst(element);
             return;
-        }
-        else if(index == this.size){
+        } else if (index == this.size) {
             insertLast(element);
             return;
         }
-        
+
         Node<E> curr = this.head;
-        for (int i = 0; i < index - 1; i++){
+        for (int i = 0; i < index - 1; i++) {
             curr = curr.next;
         }
 
@@ -107,17 +106,18 @@ public class SinglyLinkedList<E> implements List<E> {
     @Override
     public void insertFirst(E element) {
         this.head = new Node<E>(element, head);
-        if (this.size == 0) tail = head;
+        if (this.size == 0)
+            tail = head;
         size++;
     }
 
     @Override
     public void insertLast(E element) {
-        if(this.size == 0){
+        if (this.size == 0) {
             this.head = new Node<E>(element);
             this.tail = head;
             size++;
-            return;    
+            return;
         }
 
         Node<E> node = new Node<E>(element);
@@ -128,45 +128,50 @@ public class SinglyLinkedList<E> implements List<E> {
 
     @Override
     public E delete(int index) throws IndexOutOfBoundsException {
-        if (index < 0 || index >= size) throw new IndexOutOfBoundsException("Index out of bounds");
-        if (size == 0) throw new NoSuchElementException("List is empty");
+        if (index < 0 || index >= size)
+            throw new IndexOutOfBoundsException("Index out of bounds");
 
-        E value = null;
-        if (size == 1){
-            value = head.value;
-            head = tail = null;
-            return value;
-        }
-        if (index == 0){
-            value = head.value;
+        // delete head
+        if (index == 0) {
+            E value = head.value;
             head = head.next;
+            size--;
+            if (size == 0)
+                tail = null; // list became empty
             return value;
         }
 
-        Node<E> curr = head;
-        for (int i = 0; i < index - 1; i++){
-            curr = curr.next;
+        // delete middle or tail
+        Node<E> prev = head;
+        for (int i = 0; i < index - 1; i++) {
+            prev = prev.next;
         }
-
-        value = curr.next.value;
-        curr.next = curr.next.next;
+        Node<E> target = prev.next;
+        E value = target.value;
+        prev.next = target.next;
+        if (target == tail)
+            tail = prev; // deleted last node -> update tail
+        size--;
         return value;
     }
 
     @Override
     public E deleteFirst() throws NoSuchElementException {
-        if(size <= 0) throw new NoSuchElementException("Linked list is empty");
+        if (size <= 0)
+            throw new NoSuchElementException("Linked list is empty");
 
         E value = head.value;
         this.head = head.next;
         size--;
-
+        if (size == 0)
+            tail = null; // list became empty
+            
         return value;
     }
 
     @Override
     public Iterator<E> iterator() {
-        return new SinglyLinkedListIterator(head);
+        return new SinglyLinkedListIterator();
     }
 
     @Override
@@ -174,67 +179,102 @@ public class SinglyLinkedList<E> implements List<E> {
         Object[] array = new Object[size];
 
         Node<E> current = head;
-        for (int i = 0; i < size; i++){
+        for (int i = 0; i < size; i++) {
             array[i] = current.value;
             current = current.next;
         }
 
         return array;
     }
-    
 
     public static class Node<E> {
         private E value;
         private Node<E> next;
 
-        public Node(){
+        public Node() {
             this.value = null;
             this.next = null;
         }
 
-        public Node(E value){
+        public Node(E value) {
             this.value = value;
             this.next = null;
         }
 
-        public Node(E value, Node<E> next){
+        public Node(E value, Node<E> next) {
             this.value = value;
             this.next = next;
         }
     }
 
-    public class SinglyLinkedListIterator implements Iterator<E> {
-        private Node<E> currentNode;
+    private class SinglyLinkedListIterator implements Iterator<E> {
+        private Node<E> currentNode = head;
         private Node<E> previousNode;
         private boolean wasNextCalled;
+        private Node<E> lastReturn;
+        private Node<E> beforeLastReturn;
 
-        public SinglyLinkedListIterator(Node<E> head){
-            this.currentNode = head;
-        }
+
+        // public SinglyLinkedListIterator(Node<E> head) {
+        //     this.currentNode = head;
+        // }
 
         @Override
         public boolean hasNext() {
-            if (currentNode == null) return false;
-            return currentNode.next != null;
+            return currentNode != null;
         }
 
         @Override
         public E next() {
-            if (!hasNext()) throw new NoSuchElementException("There is not next element");
+            if(currentNode == null) throw new NoSuchElementException("There isnt another element");
+
+            beforeLastReturn = previousNode;
+            lastReturn = currentNode;
+
             previousNode = currentNode;
             currentNode = currentNode.next;
+
             wasNextCalled = true;
-            return currentNode.value;
+            return lastReturn.value;
+            // if (!hasNext())
+            //     throw new NoSuchElementException("There is not next element");
+            // previousNode = currentNode;
+            // currentNode = currentNode.next;
+            // wasNextCalled = true;
+            // return currentNode.value;
         }
 
         @Override
         public void remove() {
-            if (!wasNextCalled) throw new IllegalStateException("Remove cannot be called before next");
-            previousNode.next = currentNode.next;
-            currentNode.next = null;
-            currentNode = previousNode.next;
-
+            if(!wasNextCalled) throw new IllegalStateException("Remove cannot be called before next");
+            
+            if(beforeLastReturn == null){
+                head = head.next;
+                if(head == null){
+                    tail = null;
+                }
+                if(previousNode == lastReturn){
+                    previousNode = null;
+                }
+            }else{
+                beforeLastReturn.next = lastReturn.next;
+                if(lastReturn == tail){
+                    tail = beforeLastReturn;
+                }
+                if(previousNode == lastReturn){
+                    previousNode = beforeLastReturn;
+                }
+            }
+            size--;
+            lastReturn = null;
             wasNextCalled = false;
+            // if (!wasNextCalled)
+            //     throw new IllegalStateException("Remove cannot be called before next");
+            // previousNode.next = currentNode.next;
+            // currentNode.next = null;
+            // currentNode = previousNode.next;
+
+            // wasNextCalled = false;
         }
     }
 }
