@@ -90,44 +90,34 @@ public class SinglyLinkedList<E> implements List<E> {
         }
         
         Node<E> curr = this.head;
-        int i = 0;
-        while(i < index-1){
+        for (int i = 0; i < index - 1; i++){
             curr = curr.next;
-            i++;
         }
+
         Node<E> afterCurr = curr.next;
-        Node<E> newNode = new Node<>();
-        newNode.value = element;
+        Node<E> newNode = new Node<>(element, afterCurr);
         curr.next = newNode;
-        newNode.next = afterCurr;
+
         this.size++;
     }
 
     @Override
     public void insertFirst(E element) {
-        if(this.size == 0){
-            this.head.value = element;
-            this.tail.value = element;
-            size++;
-            return;    
-        }
-        Node<E> node = new Node<E>();
-        node.value = element;
-        node.next = head;
-        this.head = node;
+        this.head = new Node<E>(element, head);
+        if (this.size == 0) tail = head;
         size++;
     }
 
     @Override
     public void insertLast(E element) {
         if(this.size == 0){
-            this.head.value = element;
-            this.tail.value = element;
+            this.head = new Node<E>(element);
+            this.tail = head;
             size++;
             return;    
         }
-        Node<E> node = new Node<E>();
-        node.value = element;
+
+        Node<E> node = new Node<E>(element);
         this.tail.next = node;
         this.tail = node;
         size++;
@@ -142,11 +132,10 @@ public class SinglyLinkedList<E> implements List<E> {
             size--;
             return val;
         }
-        int i = 0;
+
         Node<E> curr = head;
-        while (i < index-1){
+        for (int i = 0; i < index - 1; i++){
             curr = curr.next;
-            i++;
         }
 
         Node<E> target = curr.next;
@@ -159,34 +148,27 @@ public class SinglyLinkedList<E> implements List<E> {
     @Override
     public E deleteFirst() throws NoSuchElementException {
         if(size <= 0) throw new NoSuchElementException("Linked list is empty");
-        if(size == 1){
-            E val = this.head.value;
-            this.head = null;
-            this.tail = null;
-            this.size = 0;
-            return val;
-        }
-        Node<E> node = head;
+
+        E value = head.value;
         this.head = head.next;
         size--;
-        return node.value;
+
+        return value;
     }
 
     @Override
     public Iterator<E> iterator() {
-        return new SinglyLinkedListIterator<E>();
+        return new SinglyLinkedListIterator(head);
     }
 
     @Override
     public Object[] toArray() {
         Object[] array = new Object[size];
 
-        int i = 0;
         Node<E> current = head;
-        while (i < size){
+        for (int i = 0; i < size; i++){
             array[i] = current.value;
             current = current.next;
-            i++;
         }
 
         return array;
@@ -201,15 +183,30 @@ public class SinglyLinkedList<E> implements List<E> {
             this.value = null;
             this.next = null;
         }
+
+        public Node(E value){
+            this.value = value;
+            this.next = null;
+        }
+
+        public Node(E value, Node<E> next){
+            this.value = value;
+            this.next = next;
+        }
     }
 
-    public static class SinglyLinkedListIterator<E> implements Iterator<E> {
+    public class SinglyLinkedListIterator implements Iterator<E> {
         private Node<E> currentNode;
         private Node<E> previousNode;
         private boolean wasNextCalled;
 
+        public SinglyLinkedListIterator(Node<E> head){
+            this.currentNode = head;
+        }
+
         @Override
         public boolean hasNext() {
+            if (currentNode == null) return false;
             return currentNode.next != null;
         }
 
@@ -224,10 +221,13 @@ public class SinglyLinkedList<E> implements List<E> {
 
         @Override
         public void remove() {
+            //TODO - Come back to this method
             if (!wasNextCalled) throw new IllegalStateException("Remove cannot be called before next");
             previousNode.next = currentNode.next;
             currentNode.next = null;
             currentNode = previousNode.next;
+
+            wasNextCalled = false;
         }
     }
 }
